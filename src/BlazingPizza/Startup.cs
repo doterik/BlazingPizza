@@ -51,6 +51,7 @@ namespace BlazingPizza
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddCookie()
+                /*
                 .AddTwitter(twitterOptions =>
                 {
                     twitterOptions.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
@@ -60,6 +61,12 @@ namespace BlazingPizza
                         context.HandleResponse();
                         return context.Response.WriteAsync("<script>window.close();</script>");
                     };
+                });
+                */
+                .AddMicrosoftAccount(microsoftOptions =>
+                {
+                    microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ApplicationId"];
+                    microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:Password"];
                 });
 
             services.AddDbContext<PizzaStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
