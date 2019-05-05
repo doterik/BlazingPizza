@@ -55,10 +55,6 @@ namespace BlazingPizza.OrderQueueWorker
                     {
                         var order = JsonConvert.DeserializeObject<Order>(msg.AsString);
 
-                        _logger.LogInformation($"-----------------------------");
-                        _logger.LogInformation($"Saving Order #{order.OrderId}");
-                        _logger.LogInformation($"-----------------------------");
-
                         using (IServiceScope scope = _serviceProvider.CreateScope())
                         {
                             var context = scope.ServiceProvider.GetRequiredService<PizzaStoreContext>();
