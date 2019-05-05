@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BlazingPizza.Data
+namespace BlazingPizza.Shared
 {
     public static class SeedData
     {
