@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace BlazingPizza
 {
-    // TODO: move most of this code into a worker and have it pop messages back to the UI
     public class OrderWithStatus
     {
         public Order Order { get; set; }

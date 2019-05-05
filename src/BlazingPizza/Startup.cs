@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BlazingPizza.Server.Services;
 using BlazingPizza.Shared;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace BlazingPizza
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGrpc();
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
@@ -88,6 +90,7 @@ namespace BlazingPizza
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGrpcService<PizzaStatusService>();
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
