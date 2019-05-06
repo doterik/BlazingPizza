@@ -36,7 +36,7 @@ namespace BlazingPizza
                                 listenOptions.Protocols = HttpProtocols.Http1;
                                 listenOptions.UseHttps();
                             });
-                            options.Listen(IPAddress.Any, 50001, listenOptions =>
+                            options.Listen(IPAddress.Any, 50051, listenOptions =>
                             {
                                 listenOptions.Protocols = HttpProtocols.Http2;
                             });
