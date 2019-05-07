@@ -35,7 +35,7 @@
 
     async Task<List<Order>> LoadOrders()
     {
-        await Task.Delay(1000); // Wait for the Pizza Worker to save the order
+        await Task.Delay(3000); // Wait for the Pizza Worker to save the order
         return await Store.GetOrders(UserState.CurrentUser.DisplayName);
     }
 }

@@ -73,7 +73,7 @@ namespace BlazingPizza.PizzaDeliveryWorker
                             // Send delivery status 
                             var startPosition = order.CurrentLocation;
                             var dispatchTime = DateTime.Now;
-                            var deliveryDuration = TimeSpan.FromMinutes(1);
+                            var deliveryDuration = TimeSpan.FromSeconds(20);
                             var proportionOfDeliveryCompleted = 0d;
                             var channel = new Channel("localhost:50051", ChannelCredentials.Insecure);
                             var client = new PizzaOrderStatusClient(channel);
