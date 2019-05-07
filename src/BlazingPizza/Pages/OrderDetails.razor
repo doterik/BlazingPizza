@@ -71,17 +71,12 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Console.WriteLine("OrderDetails.OnParametersSetAsync");
         try
         {
             order = await Store.GetOrder(OrderId, UserState.CurrentUser.DisplayName);
-            Console.WriteLine($"Retrived order details for order {OrderId}");
             invalidOrder = order == null;
-            Console.WriteLine($"invalidOrder: {invalidOrder}");
-            Console.WriteLine($"order.State: {order.Status}");
             if (!invalidOrder && order.Status != "Delivered")
             {
-                Console.WriteLine($"Added OrderStatusChanged event handler");
                 OrderStatusUpdater.OrderStatusChanged += OrderStatusChanged;
             }
         }
@@ -96,13 +91,11 @@
     {
         Invoke(() =>
         {
-            Console.WriteLine($"OrderDetails for order {order.OrderId} recevied OrderStatusChanged for order {orderStatus.OrderId}");
             if (orderStatus.OrderId == order.OrderId)
             {
                 order.Status = orderStatus.Status;
                 order.CurrentLocation = orderStatus.CurrentLocation;
                 StateHasChanged();
-                Console.WriteLine($"OrderDetails for order {order.OrderId} state has changed");
             }
         });
     }
@@ -126,6 +119,5 @@
     void IDisposable.Dispose()
     {
         OrderStatusUpdater.OrderStatusChanged -= OrderStatusChanged;
-        Console.WriteLine($"Removed OrderStatusChanged event handler");
     }
 }

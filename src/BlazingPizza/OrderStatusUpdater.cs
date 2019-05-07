@@ -11,8 +11,6 @@ namespace BlazingPizza
 
         public void UpdateOrderStatus(OrderStatus orderStatus)
         {
-            Console.WriteLine("PizzaStore.UpdateOrderStatus");
-            Console.WriteLine($"OrderStatusChanged == null: {OrderStatusChanged == null}");
             OrderStatusChanged?.Invoke(this, orderStatus);
         }
     }
