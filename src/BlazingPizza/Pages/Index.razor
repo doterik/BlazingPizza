@@ -10,13 +10,7 @@
         {
             @foreach (var special in specials)
             {
-                <li onclick="@(() => OrderState.ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
-                    <div class="pizza-info">
-                        <span class="title">@special.Name</span>
-                        @special.Description
-                        <span class="price">@special.GetFormattedBasePrice()</span>
-                    </div>
-                </li>
+                <PizzaSpecialCard PizzaSpecial="special" OnClick="@(() => OrderState.ShowConfigurePizzaDialog(special))" />
             }
         }
     </ul>
@@ -30,7 +24,7 @@
 
             @foreach (var configuredPizza in OrderState.Order.Pizzas)
             {
-                <ConfiguredPizzaItem Pizza="configuredPizza" OnRemoved="() => OrderState.RemoveConfiguredPizza(configuredPizza)" />
+                <ConfiguredPizzaItem Pizza="configuredPizza" OnRemoved="@(() => OrderState.RemoveConfiguredPizza(configuredPizza))" />
             }
         </div>
     }
@@ -66,11 +60,6 @@
         specials = await Store.GetSpecials();
     }
 
-    void IDisposable.Dispose()
-    {
-        OrderState.StateChanged -= OnOrderStateChanged;
-    }
-
     void OnOrderStateChanged(object sender, EventArgs e) => StateHasChanged();
 
     async Task PlaceOrder()
@@ -83,5 +72,10 @@
             OrderState.ResetOrder();
             UriHelper.NavigateTo("myorders");
         }
+    }
+
+    void IDisposable.Dispose()
+    {
+        OrderState.StateChanged -= OnOrderStateChanged;
     }
 }

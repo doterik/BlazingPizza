@@ -1,0 +1,15 @@
+﻿<li onclick="@OnClick" style="background-image: url('@PizzaSpecial.ImageUrl')">
+    <div class="pizza-info">
+        <span class="title">@PizzaSpecial.Name</span>
+        @PizzaSpecial.Description
+        <span class="price">@PizzaSpecial.GetFormattedBasePrice()</span>
+    </div>
+</li>
+
+@functions {
+    [Parameter]
+    PizzaSpecial PizzaSpecial { get; set; }
+
+    [Parameter]
+    EventCallback OnClick { get; set; }
+}
