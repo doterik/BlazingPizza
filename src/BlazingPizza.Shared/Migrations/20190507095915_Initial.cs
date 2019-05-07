@@ -17,7 +17,10 @@ namespace BlazingPizza.Migrations
                     UserId = table.Column<string>(nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: false),
                     DeliveryLocation_Latitude = table.Column<double>(nullable: true),
-                    DeliveryLocation_Longitude = table.Column<double>(nullable: true)
+                    DeliveryLocation_Longitude = table.Column<double>(nullable: true),
+                    CurrentLocation_Latitude = table.Column<double>(nullable: true),
+                    CurrentLocation_Longitude = table.Column<double>(nullable: true),
+                    Status = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

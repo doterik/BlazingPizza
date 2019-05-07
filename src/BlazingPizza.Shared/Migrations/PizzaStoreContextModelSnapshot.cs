@@ -4,16 +4,14 @@ using BlazingPizza.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlazingPizza.Migrations
 {
     [DbContext(typeof(PizzaStoreContext))]
-    [Migration("20190501211429_Initial")]
-    partial class Initial
+    partial class PizzaStoreContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,6 +26,8 @@ namespace BlazingPizza.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedTime");
+
+                    b.Property<string>("Status");
 
                     b.Property<string>("UserId");
 
@@ -306,6 +306,24 @@ namespace BlazingPizza.Migrations
 
             modelBuilder.Entity("BlazingPizza.Order", b =>
                 {
+                    b.OwnsOne("BlazingPizza.LatLong", "CurrentLocation", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<double>("Latitude");
+
+                            b1.Property<double>("Longitude");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
                     b.OwnsOne("BlazingPizza.LatLong", "DeliveryLocation", b1 =>
                         {
                             b1.Property<int>("OrderId")

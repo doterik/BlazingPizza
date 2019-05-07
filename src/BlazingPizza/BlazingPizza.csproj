@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\pizzastatus.proto" GrpcServices="Server" Generator="MSBuild:Compile"/>
+    <Protobuf Include="Protos\pizzaorderstatus.proto" GrpcServices="Server" Generator="MSBuild:Compile" />
     <Content Include="@(Protobuf)" />
     <None Remove="@(Protobuf)" />
   </ItemGroup>
@@ -22,7 +22,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\BlazingComponents\BlazingComponents.csproj" />
     <ProjectReference Include="..\BlazingPizza.ComponentsLibrary\BlazingPizza.ComponentsLibrary.csproj" />
     <ProjectReference Include="..\BlazingPizza.Shared\BlazingPizza.Shared.csproj" />
   </ItemGroup>

@@ -62,8 +62,8 @@ namespace BlazingPizza
             services.AddDbContext<PizzaStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IPizzaStore, PizzaStore>();
-
             services.AddScoped<OrderState>();
+            services.AddSingleton<OrderStatusUpdater>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,7 +90,7 @@ namespace BlazingPizza
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<PizzaStatusService>();
+                endpoints.MapGrpcService<PizzaOrderStatusService>();
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");

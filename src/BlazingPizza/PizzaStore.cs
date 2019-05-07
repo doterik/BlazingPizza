@@ -1,5 +1,6 @@
 ﻿using BlazingPizza.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
@@ -14,9 +15,12 @@ namespace BlazingPizza
     {
         private PizzaStoreContext _db;
 
-        public PizzaStore(PizzaStoreContext db)
+        public IConfiguration Configuration { get; }
+
+        public PizzaStore(PizzaStoreContext db, IConfiguration configuration)
         {
             _db = db;
+            Configuration = configuration;
         }
 
         public async Task<List<PizzaSpecial>> GetSpecials()
@@ -29,7 +33,7 @@ namespace BlazingPizza
             return await _db.Toppings.OrderBy(t => t.Name).ToListAsync();
         }
 
-        public async Task<List<OrderWithStatus>> GetOrders(string userId)
+        public async Task<List<Order>> GetOrders(string userId)
         {
             var orders = await _db.Orders
                 .Where(o => o.UserId == userId)
@@ -38,10 +42,10 @@ namespace BlazingPizza
                 .OrderByDescending(o => o.CreatedTime)
                 .ToListAsync();
 
-            return orders.Select(o => OrderWithStatus.FromOrder(o)).ToList();
+            return orders;
         }
 
-        public async Task<OrderWithStatus> GetOrderWithStatus(int orderId, string userId)
+        public async Task<Order> GetOrder(int orderId, string userId)
         {
             var order = await _db.Orders
                 .Where(o => o.OrderId == orderId)
@@ -52,22 +56,24 @@ namespace BlazingPizza
 
             if (order == null) return null;
 
-            return OrderWithStatus.FromOrder(order);
+            return order;
         }
 
         public async Task PlaceOrder(Order order, string userId)
         {
             // TODO: change to be an enqueue process here
+            var str = Configuration["Azure:Storage:ConnectionString"];
             CloudStorageAccount account;
-            if(CloudStorageAccount.TryParse(Environment.GetEnvironmentVariable("STORAGE_ACCOUNT"), 
-                out account) == true)
+            if(CloudStorageAccount.TryParse(str, out account) == true)
             {
                 order.CreatedTime = DateTime.Now;
-                order.DeliveryLocation = new LatLong(51.5001, -0.1239);
+                order.DeliveryLocation = new LatLong(47.611860, -122.331926);
+                order.CurrentLocation = new LatLong(47.610110, -122.342250);
+                order.Status = "Ordered";
                 order.UserId = userId;
 
                 // queue the order
-                var qName = "incomingorders";
+                var qName = "pizzaorders";
                 await account.CreateCloudQueueClient()
                     .GetQueueReference(qName).CreateIfNotExistsAsync();
 

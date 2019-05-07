@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package BlazingPizza.OrderStatusUpdates;
+
+service PizzaOrderStatus {
+  rpc SendStatus (StatusUpdate) returns (Ack) {}
+}
+
+message StatusUpdate {
+  int32 OrderId = 1;
+  string UserId = 2;
+  string StatusText = 3;
+  double Lat = 4;
+  double Long = 5;
+}
+
+message Ack {
+  string message = 1;
+}

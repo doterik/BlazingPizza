@@ -3,6 +3,7 @@
 @layout ForceSignInLayout
 @using System.Threading
 @inject IPizzaStore Store
+@inject OrderStatusUpdater OrderStatusUpdater
 
 
 <div class="main">
@@ -11,7 +12,7 @@
         <h2>Nope</h2>
         <p>Sorry, this order could not be loaded.</p>
     }
-    else if (orderWithStatus == null)
+    else if (order == null)
     {
         <text>Loading...</text>
     }
@@ -20,15 +21,15 @@
         <div class="track-order">
             <div class="track-order-title">
                 <h2>
-                    Order placed @orderWithStatus.Order.CreatedTime.ToLongDateString()
+                    Order placed @order.CreatedTime.ToLongDateString()
                 </h2>
                 <p class="ml-auto mb-0">
-                    Status: <strong>@orderWithStatus.StatusText</strong>
+                    Status: <strong>@order.Status</strong>
                 </p>
             </div>
             <div class="track-order-body">
                 <div class="track-order-details">
-                    @foreach (var pizza in orderWithStatus.Order.Pizzas)
+                    @foreach (var pizza in order.Pizzas)
                     {
                         <p>
                             <strong>
@@ -49,12 +50,12 @@
                     <p>
                         <strong>
                             Total price:
-                            £@orderWithStatus.Order.GetFormattedTotalPrice()
+                            £@order.GetFormattedTotalPrice()
                         </strong>
                     </p>
                 </div>
                 <div class="track-order-map">
-                    <Map Zoom="13" Markers="@orderWithStatus.MapMarkers" />
+                    <Map Zoom="13" Markers="GetMapMarkers()" />
                 </div>
             </div>
         </div>
@@ -65,44 +66,66 @@
     [Parameter] int OrderId { get; set; }
     [CascadingParameter] UserStateProvider UserState { get; set; }
 
-    OrderWithStatus orderWithStatus;
+    Order order;
     bool invalidOrder;
-    CancellationTokenSource pollingCancellationToken;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        // If we were already polling for a different order, stop doing so
-        pollingCancellationToken?.Cancel();
-
-        // Start a new poll loop
-        PollForUpdates();
+        Console.WriteLine("OrderDetails.OnParametersSetAsync");
+        try
+        {
+            order = await Store.GetOrder(OrderId, UserState.CurrentUser.DisplayName);
+            Console.WriteLine($"Retrived order details for order {OrderId}");
+            invalidOrder = order == null;
+            Console.WriteLine($"invalidOrder: {invalidOrder}");
+            Console.WriteLine($"order.State: {order.Status}");
+            if (!invalidOrder && order.Status != "Delivered")
+            {
+                Console.WriteLine($"Added OrderStatusChanged event handler");
+                OrderStatusUpdater.OrderStatusChanged += OrderStatusChanged;
+            }
+        }
+        catch (Exception ex)
+        {
+            invalidOrder = true;
+            Console.Error.WriteLine(ex);
+        }
     }
+
+    void OrderStatusChanged(object sender, OrderStatus orderStatus)
+    {
+        Invoke(() =>
+        {
+            Console.WriteLine($"OrderDetails for order {order.OrderId} recevied OrderStatusChanged for order {orderStatus.OrderId}");
+            if (orderStatus.OrderId == order.OrderId)
+            {
+                order.Status = orderStatus.Status;
+                order.CurrentLocation = orderStatus.CurrentLocation;
+                StateHasChanged();
+                Console.WriteLine($"OrderDetails for order {order.OrderId} state has changed");
+            }
+        });
+    }
+
+
+    List<Marker> GetMapMarkers()
+    {
+        var mapMarkers = new List<Marker>();
+        mapMarkers.Add(ToMapMarker(order.Status == "Delivered" ? "Delivery location" : "You", order.DeliveryLocation, showPopup: true));
+        if (order.Status == "Out for delivery")
+        {
+            mapMarkers.Add(ToMapMarker("Driver", order.CurrentLocation, showPopup: true));
+        }
+
+        return mapMarkers;
+    }
+
+    static Marker ToMapMarker(string description, LatLong coords, bool showPopup = false)
+            => new Marker { Description = description, X = coords.Longitude, Y = coords.Latitude, ShowPopup = showPopup };
 
     void IDisposable.Dispose()
     {
-        pollingCancellationToken?.Cancel();
-    }
-
-    private async void PollForUpdates()
-    {
-        pollingCancellationToken = new CancellationTokenSource();
-        while (!pollingCancellationToken.IsCancellationRequested)
-        {
-            try
-            {
-                invalidOrder = false;
-                orderWithStatus = await Store.GetOrderWithStatus(OrderId, UserState.CurrentUser.DisplayName);
-            }
-            catch (Exception ex)
-            {
-                invalidOrder = true;
-                pollingCancellationToken.Cancel();
-                Console.Error.WriteLine(ex);
-            }
-
-            StateHasChanged();
-
-            await Task.Delay(4000);
-        }
+        OrderStatusUpdater.OrderStatusChanged -= OrderStatusChanged;
+        Console.WriteLine($"Removed OrderStatusChanged event handler");
     }
 }

@@ -11,17 +11,17 @@
         </EmptyContent>
         <ItemContent Context="item">
             <div class="col">
-                <h5>@item.Order.CreatedTime.ToLongDateString()</h5>
+                <h5>@item.CreatedTime.ToLongDateString()</h5>
                 Items:
-                <strong>@item.Order.Pizzas.Count()</strong>;
+                <strong>@item.Pizzas.Count()</strong>;
                 Total price:
-                <strong>£@item.Order.GetFormattedTotalPrice()</strong>
+                <strong>£@item.GetFormattedTotalPrice()</strong>
             </div>
             <div class="col">
-                Status: <strong>@item.StatusText</strong>
+                Status: <strong>@item.Status</strong>
             </div>
             <div class="col flex-grow-0">
-                <a href="myorders/@item.Order.OrderId" class="btn btn-success">
+                <a href="myorders/@item.OrderId" class="btn btn-success">
                     Track &gt;
                 </a>
             </div>
@@ -32,8 +32,10 @@
 @functions {
     [CascadingParameter] UserStateProvider UserState { get; set; }
 
-    async Task<List<OrderWithStatus>> LoadOrders()
+
+    async Task<List<Order>> LoadOrders()
     {
+        await Task.Delay(1000); // Wait for the Pizza Worker to save the order
         return await Store.GetOrders(UserState.CurrentUser.DisplayName);
     }
 }

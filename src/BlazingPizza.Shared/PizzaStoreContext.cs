@@ -30,6 +30,7 @@ namespace BlazingPizza.Shared
 
             // Inline the Lat-Long pairs in Order rather than having a FK to another table
             modelBuilder.Entity<Order>().OwnsOne(o => o.DeliveryLocation);
+            modelBuilder.Entity<Order>().OwnsOne(o => o.CurrentLocation);
 
             modelBuilder.Entity<Topping>().HasData(SeedData.PizzaToppings);
             modelBuilder.Entity<PizzaSpecial>().HasData(SeedData.PizzaSpecials);
