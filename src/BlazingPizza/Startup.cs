@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BlazingPizza.Data;
+using BlazingPizza.Server.Services;
+using BlazingPizza.Shared;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -30,6 +31,7 @@ namespace BlazingPizza
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGrpc();
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
@@ -51,18 +53,6 @@ namespace BlazingPizza
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddCookie()
-                /*
-                .AddTwitter(twitterOptions =>
-                {
-                    twitterOptions.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                    twitterOptions.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-                    twitterOptions.Events.OnRemoteFailure = (context) =>
-                    {
-                        context.HandleResponse();
-                        return context.Response.WriteAsync("<script>window.close();</script>");
-                    };
-                });
-                */
                 .AddMicrosoftAccount(microsoftOptions =>
                 {
                     microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ApplicationId"];
@@ -100,6 +90,7 @@ namespace BlazingPizza
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGrpcService<PizzaStatusService>();
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");

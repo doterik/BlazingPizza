@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28829.227
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -9,6 +9,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingComponents", "BlazingComponents\BlazingComponents.csproj", "{659BA43E-C36D-4F2D-A715-22465BE90792}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingPizza", "BlazingPizza\BlazingPizza.csproj", "{45075CB7-30F1-4757-B007-AD0C58C03702}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingPizza.OrderQueueWorker", "BlazingPizza.OrderQueueWorker\BlazingPizza.OrderQueueWorker.csproj", "{CA1433DA-1109-4705-AE84-C7AD58CE80B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazingPizza.OrderStatusTracker", "BlazingPizza.OrderStatusTracker\BlazingPizza.OrderStatusTracker.csproj", "{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,30 @@ Global
 		{45075CB7-30F1-4757-B007-AD0C58C03702}.Release|x64.Build.0 = Release|Any CPU
 		{45075CB7-30F1-4757-B007-AD0C58C03702}.Release|x86.ActiveCfg = Release|Any CPU
 		{45075CB7-30F1-4757-B007-AD0C58C03702}.Release|x86.Build.0 = Release|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Release|x64.Build.0 = Release|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA1433DA-1109-4705-AE84-C7AD58CE80B1}.Release|x86.Build.0 = Release|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Debug|x64.Build.0 = Debug|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Debug|x86.Build.0 = Debug|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Release|x64.ActiveCfg = Release|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Release|x64.Build.0 = Release|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Release|x86.ActiveCfg = Release|Any CPU
+		{44A1E7A7-F2C6-4B61-9BD2-C7E692B12664}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

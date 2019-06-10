@@ -1,5 +1,8 @@
-﻿using BlazingPizza.Data;
+﻿using BlazingPizza.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,12 +57,25 @@ namespace BlazingPizza
 
         public async Task PlaceOrder(Order order, string userId)
         {
-            order.CreatedTime = DateTime.Now;
-            order.DeliveryLocation = new LatLong(51.5001, -0.1239);
-            order.UserId = userId;
+            // TODO: change to be an enqueue process here
+            CloudStorageAccount account;
+            if(CloudStorageAccount.TryParse(Environment.GetEnvironmentVariable("STORAGE_ACCOUNT"), 
+                out account) == true)
+            {
+                order.CreatedTime = DateTime.Now;
+                order.DeliveryLocation = new LatLong(51.5001, -0.1239);
+                order.UserId = userId;
 
-            _db.Orders.Attach(order);
-            await _db.SaveChangesAsync();
+                // queue the order
+                var qName = "incomingorders";
+                await account.CreateCloudQueueClient()
+                    .GetQueueReference(qName).CreateIfNotExistsAsync();
+
+                var queue = account.CreateCloudQueueClient()
+                    .GetQueueReference(qName);
+
+                await queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(order)));
+            }
         }
     }
 }
