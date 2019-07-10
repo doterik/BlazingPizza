@@ -25,22 +25,6 @@ namespace BlazingPizza
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .ConfigureKestrel(options =>
-                        {
-                            options.Listen(IPAddress.Any, 5000, listenOptions =>
-                            {
-                                listenOptions.Protocols = HttpProtocols.Http1;
-                            });
-                            options.Listen(IPAddress.Any, 5001, listenOptions =>
-                            {
-                                listenOptions.Protocols = HttpProtocols.Http1;
-                                listenOptions.UseHttps();
-                            });
-                            options.Listen(IPAddress.Any, 50051, listenOptions =>
-                            {
-                                listenOptions.Protocols = HttpProtocols.Http2;
-                            });
-                        })
                         .UseStartup<Startup>();
                 });
     }

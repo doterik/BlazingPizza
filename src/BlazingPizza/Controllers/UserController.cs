@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BlazingPizza.Server
@@ -35,9 +36,11 @@ namespace BlazingPizza.Server
         public IActionResult SignInCompleted()
         {
             var userState = GetUser();
+            var json = JsonConvert.SerializeObject(
+                userState, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
             return Content($@"
                 <script>
-                    window.opener.onLoginPopupFinished({JsonConvert.SerializeObject(userState)});
+                    window.opener.onLoginPopupFinished({json});
                     window.close();
                 </script>", "text/html");
         }

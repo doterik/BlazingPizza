@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using BlazingPizza.OrderStatusClient;
 using BlazingPizza.OrderStatusUpdates;
 using BlazingPizza.Shared;
 using Grpc.Core;
+using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -75,8 +77,8 @@ namespace BlazingPizza.PizzaDeliveryWorker
                             var dispatchTime = DateTime.Now;
                             var deliveryDuration = TimeSpan.FromSeconds(20);
                             var proportionOfDeliveryCompleted = 0d;
-                            var channel = new Channel("localhost:50051", ChannelCredentials.Insecure);
-                            var client = new PizzaOrderStatusClient(channel);
+                            var httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:5001") };
+                            var client = GrpcClient.Create<PizzaOrderStatusClient>(httpClient);
                             Ack ack;
 
                             while (proportionOfDeliveryCompleted < 1)

@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 using BlazingPizza.OrderStatusUpdates;
 using static BlazingPizza.OrderStatusUpdates.PizzaOrderStatus;
 using BlazingPizza.OrderStatusClient;
+using System.Net.Http;
+using Grpc.Net.Client;
 
 namespace BlazingPizza.PizzaWorker
 {
@@ -75,8 +77,8 @@ namespace BlazingPizza.PizzaWorker
                             _logger.LogInformation($"Preparing order {order.OrderId}");
 
                             // Send Preparing status
-                            var channel = new Channel("localhost:50051", ChannelCredentials.Insecure);
-                            var client = new PizzaOrderStatusClient(channel);
+                            var httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:5001") };
+                            var client = GrpcClient.Create<PizzaOrderStatusClient>(httpClient);
                             var ack = await client.SendStatusAsync(order.ToStatusUpdate());
                             _logger.LogInformation($"Status update ack: {ack.Message}");
 
